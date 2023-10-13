@@ -4,6 +4,22 @@ namespace Plexcorp\Monitoring;
 
 class Stats 
 {
+    static function saveViaApi($data) {
+        $data['SHELL_API_KEY'] = $_ENV['SHELL_API_KEY'];
+        $url = $_ENV['STAT_API_URL'] . "?action=savestats";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        curl_close($ch);
+        if ($error !== '') {
+            throw new \Exception($error);
+        }
+    
+        return $response;
+    }
+
     static function CpuUsuage() 
     {
         $avgs = sys_getloadavg();
@@ -32,5 +48,11 @@ class Stats
         $result = explode("\n",$result);
 
         return $result;
+    }
+
+    static function numberOfRunningProcesses() 
+    {
+        $cmd = 'ps -e | wc -l';
+        return shell_exec($cmd);
     }
 }

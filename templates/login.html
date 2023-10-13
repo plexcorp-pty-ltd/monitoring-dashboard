@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deeply Pastoral Marmot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="
+    https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
+    "></script>
+</head>
+<body class="bg-black">
+    <section class="py-20 pb-32">
+
+    <div class="relative max-w-6xl px-10 mx-auto">
+        <div class="flex flex-col items-start justify-start mb-12">
+            <h2 class="inline-block mb-2 mr-5 text-4xl font-extrabold tracking-tight text-white">Server resource dashboard</h2>
+            <p class="text-xl text-gray-400">Please login to continue</p>
+        </div>
+
+        <div class="grid gap-10 mt-10 py-5 px-5">
+
+            <div class="relative rounded-lg p-0.5 overflow-hidden  bg-gray-900 px-5 shadow-sm hover:border-gray-400">
+                <h3 class="text-3xl text-gray-50 mt-5">Login</h3>
+                <form class="space-y-4 md:space-y-6" action="/" method="post" id="loginForm">
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                        <input type="text" name="email" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="username" required="">
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                        <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+               
+                    <div class="py-5">
+                        <div id="loader" style="display:none;">
+                        <svg version="1.1" id="L4" class="h-24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                        <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
+                          <animate
+                            attributeName="opacity"
+                            dur="1s"
+                            values="0;1;0"
+                            repeatCount="indefinite"
+                            begin="0.1"/>    
+                        </circle>
+                        <circle fill="#fff" stroke="none" cx="26" cy="50" r="6">
+                          <animate
+                            attributeName="opacity"
+                            dur="1s"
+                            values="0;1;0"
+                            repeatCount="indefinite" 
+                            begin="0.2"/>       
+                        </circle>
+                        <circle fill="#fff" stroke="none" cx="46" cy="50" r="6">
+                          <animate
+                            attributeName="opacity"
+                            dur="1s"
+                            values="0;1;0"
+                            repeatCount="indefinite" 
+                            begin="0.3"/>     
+                        </circle>
+                      
+                       </svg>
+                       </div>
+
+                    <button type="submit" class="w-24 text-white bg-blue-500 btn btn-blue px-2 py-2 rounded" id="loginFormBtn">Sign in</button>
+                    </div>
+                 
+                </form>
+            </div>
+
+         
+
+       
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        document.getElementById("loader").style.display = "block";
+
+        let password = document.getElementById("password").value;
+        let username = document.getElementById("username").value;
+
+        if (password.length < 5 || username.length < 5) {
+            alert("User and password is too short. Minimum 5 characters.");
+            document.getElementById("loader").style.display = "none";
+            return;
+        }
+
+        let fd = new FormData();
+        fd.append("username", username);
+        fd.append("password", password);
+        fetch("/?action=api&route=authenticate", {
+            method: "post",
+            body: fd
+        }).then(response => {
+            if (response.status != 200) {
+                throw new Error("Authentication failed. Please try again.");
+            }
+
+            return response.json();
+        }).then(r => {
+            if (r.success == "yes") {
+                window.location.href = "/";
+            } else {
+                alert("Authentication failed. Please try again.");
+            }
+        }).catch(function(err) {
+            alert("Oops! Something went wrong. Please try again.");
+        }).finally(function() {
+            document.getElementById("loader").style.display = "none";
+        });
+    });
+</script>
+</body>
+</html>
