@@ -1,5 +1,8 @@
 <?php namespace Plexcorp\Monitoring;
 
+/**
+ * A simple wrapper around PDO to make querying and saving data easier.
+ */
 class Db {
     
     protected $pdo;
@@ -19,6 +22,14 @@ class Db {
         $this->pdo = null;
     }
 
+    /**
+     * Will perform a SQL insert.
+     *
+     * @param string $table
+     * @param array $data
+     * 
+     * @return int
+     */
     public function saveData($table, $data)
     {
         $placeholders = trim(str_repeat(",?", count($data)), ",");
@@ -32,6 +43,14 @@ class Db {
         return $this->pdo->lastInsertId();
     }
 
+    /**
+     * Will run "SELECT ..." queries
+     *
+     * @param string $sql
+     * @param array $params
+     * 
+     * @return array
+     */
     public function query($sql, $params)
     {
         $stmt = $this->pdo->prepare($sql);
@@ -40,6 +59,13 @@ class Db {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Similar to above except this one is for UPDATE OR DELETE statements.
+     *
+     * @param string $sql
+     * @param array $params
+     * @return void
+     */
     public function queryNoResult($sql, $params)
     {
         $stmt = $this->pdo->prepare($sql);

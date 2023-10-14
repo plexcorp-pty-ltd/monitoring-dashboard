@@ -1,7 +1,17 @@
 <?php namespace Plexcorp\Monitoring;
-
+/**
+ * $this main model that we use to store and retrieve monitoring statistics.
+ */
 class StatsModel extends Db 
 {
+    /**
+     * Return stat in percentage and timestamp. Can filter by hostname as well.
+     *
+     * @param string $stat_name
+     * @param string $hostname
+     * 
+     * @return array
+     */
     function getPercentagStat($stat_name, $hostname = "all")
     {
         $since = date("Y-m-d H:i:s", strtotime("-30 minutes"));
@@ -22,6 +32,11 @@ class StatsModel extends Db
         return $this->query($sql, $binds);
     }
 
+    /**
+     * Get all hostnames that have submitted a status update in the last 30 minutes.
+     *
+     * @return array
+     */
     function getHostnames()
     {
         $since = date("Y-m-d H:i:s", strtotime("-30 minutes"));
@@ -31,5 +46,63 @@ class StatsModel extends Db
                 GROUP BY hostname
             SQL;
         return $this->query($sql, [$since]);
+    }
+
+    /**
+     * Record a new stat
+     *
+     * @param array $data
+     * @return void
+     */
+    function saveStat($data) {
+        $id = $this->saveData("server_stats", $data);
+        $thresholdType = strtoupper($data['stat_name']) . "_THRESHOLD";
+        if (isset( $_ENV[$thresholdType]) && (float) $data['stat_numerical'] > (float) $_ENV[$thresholdType]) {
+            $spikeData = [
+                "stat_id" => $id,
+                "threshold" => $_ENV[$thresholdType],
+                "dt_datetime" => $data['dt_datetime'],
+            ];
+
+            $this->saveData("server_spikes", $spikeData);
+        }
+    }
+
+    /**
+     * Will get a list of services that have spiked in within the relevant window period.
+     *
+     * @param string[datetime] $since
+     * @param string $hostname
+     * @return array
+     */
+    function getSpikes($since, $hostname)
+    {
+        $sql = <<<SQL
+        SELECT s.hostname, s.stat_name,
+        count(stat_id) as total_in_alarm,
+        MAX(s.stat_numerical) as actual_value,
+        MIN(spk.threshold) as threshold
+        FROM server_stats s 
+        JOIN server_spikes spk ON (s.id = spk.stat_id) 
+        WHERE s.dt_datetime >= ?
+        AND s.hostname= ?
+        GROUP BY stat_name having total_in_alarm >= ?;
+        SQL;
+
+        return $this->query($sql, [$since, $hostname, $_ENV["ALERT_THRESHOLD_MIN"]]);
+    }
+
+    /**
+     * Count how many emails have been sent.
+     *
+     * @return int
+     */
+    function emailsSentToday()
+    {
+        $sql = "SELECT COUNT(*) as sent FROM emails_sent_today WHERE date_no_time = ?";
+        $st = $this->pdo->prepare($sql);
+        $st->execute([date("Y-m-d")]);
+
+        return $st->fetchColumn();
     }
 }

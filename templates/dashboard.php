@@ -3,24 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Deeply Pastoral Marmot</title>
+    <title>System Monitoring Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="
-    https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
-    "></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="bg-black">
     <section class="py-20 pb-32">
 
     <div class="relative max-w-8xl px-10 mx-auto">
         <div class="flex flex-col items-start justify-start mb-12">
-            <h2 class="inline-block mb-2 mr-5 text-4xl font-extrabold tracking-tight text-white">System monitor stats [<?php if($host=='all'):?> All hosts <?php else:?> <?php print $host;?><?php endif;?> ]</h2>
+            <h2 class="inline-block mb-2 mr-5 text-4xl font-extrabold tracking-tight text-white">System Monitoring Dashboard [<?php if($host=='all'):?> All hosts <?php else:?> <?php print $host;?><?php endif;?> ]</h2>
            <select id="changeHost" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">">
                 <option>Change host</option>
                 <?php foreach($hosts as $h):?>
                         <option value="<?php echo $h['hostname'];?>"><?php echo $h['hostname'];?></option>
                 <?php endforeach;?>
-                <option value="pokemon">Pokemon</option>
             </select>
         </div>
 

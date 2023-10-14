@@ -2,6 +2,9 @@
 
 namespace Plexcorp\Monitoring;
 
+/**
+ * This class runs shell commands to collect statistics from the OS.
+ */
 class Stats 
 {
     static function saveViaApi($data) {
