@@ -16,3 +16,6 @@ Currently core metrics such as:
 ## Documentation
 You can find full documentation here and as well as comments in the source code:
 https://scriptables.gitbook.io/monitoring-dashboard/
+
+## Need help?
+Please contact us via: https://plexscriptables.com/ or use the issues and discussion boards.
