@@ -1,9 +1,8 @@
 # Monitoring dashboard
 
-This project is built using PHP, and is designed to be a basic monitoring dashboard for Linux servers - similar to the "htop" command. Using a CRON - you can collect metrics on any Linux server periodically and post to the dashboard.
+This project is built using PHP, and is designed to be a basic monitoring dashboard for Linux servers - similar to the "htop" command. Metrics are collected periodically every few minutes and posted to the dashboard.
 
-The dashboard will then refresh every so often, providing a near real time health check for your servers. There is also a email alert facility to notify you of abnormal spikes.
-
+The dashboard will then refresh every so often, providing a near real time health check for your servers. There is also an email alert facility to notify you of abnormal spikes.
 
 # What metrics are collected?
 
