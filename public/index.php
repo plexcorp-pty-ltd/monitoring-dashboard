@@ -5,11 +5,13 @@
  * 
  * Currently there's just one controller that handles most of the stat operations i.e. src/ApiController.
  */
-require_once("./vendor/autoload.php");
+require_once("../vendor/autoload.php");
 
 use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+if(file_exists("../.env")) {
+    $dotenv = Dotenv::createImmutable("..".__DIR__);
+    $dotenv->load();    
+}
 
 use Plexcorp\Monitoring\ApiController;
 use Plexcorp\Monitoring\StatsModel;
@@ -47,10 +49,10 @@ switch($action) {
         $api->dispatch($route);
         break;
     case 'login':
-        echo file_get_contents("./templates/login.html");
+        echo file_get_contents("../templates/login.html");
         break;
     default:
         $hosts = (new StatsModel())->getHostnames();
         $host = $_GET['stat_host'] ?? 'all';
-        echo require_once("./templates/dashboard.php");
+        echo require_once("../templates/dashboard.php");
 }
