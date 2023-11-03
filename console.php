@@ -6,11 +6,8 @@ if (!defined('STDIN') && PHP_SAPI !== 'cli' && !empty($_SERVER['REMOTE_ADDR'])) 
 
 require_once "./vendor/autoload.php";
 
-use Dotenv\Dotenv;
-
-if(file_exists(".env")) {
-    $dotenv = Dotenv::createImmutable(__DIR__);
-    $dotenv->load();    
+if(file_exists("./config.php")) {
+    require_once("./config.php");   
 }
 
 $allowed = [

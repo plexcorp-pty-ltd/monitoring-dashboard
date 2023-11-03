@@ -7,10 +7,8 @@
  */
 require_once("../vendor/autoload.php");
 
-use Dotenv\Dotenv;
-if(file_exists("../.env")) {
-    $dotenv = Dotenv::createImmutable("..".__DIR__);
-    $dotenv->load();    
+if(file_exists("../config.php")) {
+    require_once("../config.php");   
 }
 
 use Plexcorp\Monitoring\ApiController;

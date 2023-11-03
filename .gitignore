@@ -1,3 +1,4 @@
 vendor
 statsdb.db
 .env
+composer.lock
