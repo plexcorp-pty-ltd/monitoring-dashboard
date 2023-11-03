@@ -93,6 +93,8 @@ class Agent
             $this->model->queryNoResult("DELETE FROM server_stats WHERE dt_datetime < ?", [$clearWindow]);
             $this->model->queryNoResult("DELETE FROM server_spikes WHERE dt_datetime < ?", [$clearWindow]);
             $this->model->queryNoResult("DELETE FROM emails_sent_today WHERE date_no_time != ?", [date("Y-m-d")]);
+            $this->model->queryNoResult("DELETE FROM failed_logins WHERE last_attempt < ?", [date("Y-m-d")]);
+
         } catch (\Exception $e) {
             print $e->getMessage();
         }

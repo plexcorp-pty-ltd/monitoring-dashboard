@@ -42,8 +42,25 @@ class ApiController {
     public function authenticate() {
         $username = $_POST['username'] ?? null;
         $password = $_POST['password'] ?? null;
+        $userModel = new UserModel();
 
-        if ($username != $_ENV['AUTH_USERNAME'] || $password != $_ENV['AUTH_PASS']) {
+        if ($userModel->hasTooManyFailures()) {
+            header("Content-Type: application/json");
+            echo json_encode(["success" => "no"]);
+            return;
+        }
+
+        $user = $userModel->getUser($username);
+
+        if (!$user) {
+            $userModel->logAuthFailure();
+            header("Content-Type: application/json");
+            echo json_encode(["success" => "no"]);
+            return;
+        }
+
+        if (!password_verify($password, $user->password)) {
+            $userModel->logAuthFailure();
             header("Content-Type: application/json");
             echo json_encode(["success" => "no"]);
             return;

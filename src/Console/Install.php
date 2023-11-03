@@ -92,5 +92,11 @@ class Install
             }
             throw $e;
         }
+
+
+        // Setup intial user
+        echo "Setting up intial user..." . PHP_EOL;
+        $makeUser = new MakeUser($this->args);
+        $makeUser->run();
     }
 }

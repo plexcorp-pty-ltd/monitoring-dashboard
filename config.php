@@ -1,8 +1,7 @@
 <?php
 
 // IN PROD - DELETE THIS FILE. use ENV's instead.
-
-putenv("DB_DSN=sqlite:./statsdb.db");
+putenv("DB_DSN=sqlite:".__DIR__."/statsdb.db");
 putenv("HOURS_TO_KEEP_LOGS=6");
 putenv("STAT_API_URL=https://monitoringdash.plexscriptables.com");
 putenv("MASTER_NODE=yes");
@@ -20,3 +19,10 @@ putenv("MAX_THRESHOLD_EMAILS_PER_DAY=3");
 putenv("THRESHOLD_SCAN_PERIOD=5");
 putenv("ALERT_THRESHOLD_MIN=3");
 putenv("SHELL_API_KEY=XDiop23290!(XDiop23290592323&^");
+putenv("MAX_FAILED_LOGIN_ATTEMPTS=10");
+
+$envs = getenv();
+
+foreach($envs as $k => $v) {
+    $_ENV[$k] = $v;
+}

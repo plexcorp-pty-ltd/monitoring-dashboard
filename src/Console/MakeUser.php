@@ -59,6 +59,8 @@ class MakeUser
             break;
         }
 
+        $username = str_replace([" ", "\n", "\r\n"], "", $username);
+        $password = str_replace([" ", "\n", "\r\n"], "", $password);
 
         $saved = $this->model->saveUser($username, $password);
         if (!$saved) {

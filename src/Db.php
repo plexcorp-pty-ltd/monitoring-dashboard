@@ -30,7 +30,7 @@ class Db {
      * 
      * @return int
      */
-    public function saveData($table, $data)
+    public function saveData($table, $data) :string|false|int
     {
         $placeholders = trim(str_repeat(",?", count($data)), ",");
         $cols = implode(",", array_keys($data));
@@ -58,6 +58,23 @@ class Db {
 
         return $stmt->fetchAll();
     }
+
+    /**
+     * Fetch a single row from the database
+     *
+     * @param string $sql
+     * @param array $params
+     * 
+     * @return array
+     */
+    public function fetchOne($sql, $params)
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchObject();
+    }
+
 
     /**
      * Similar to above except this one is for UPDATE OR DELETE statements.
