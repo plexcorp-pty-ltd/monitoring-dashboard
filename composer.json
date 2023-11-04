@@ -2,7 +2,7 @@
     "name": "plexcorp/monitoring",
     "description": "A simple monitoring dashboard for linux servers.",
     "type": "project",
-    "license": "Codecayon regular license",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Plexcorp\\Monitoring\\": "src/"
@@ -11,7 +11,7 @@
     "authors": [
         {
             "name": "Kevin Naidoo",
-            "email": "kevin@plexcorp.tech"
+            "email": ""
         }
     ],
     "require": {
