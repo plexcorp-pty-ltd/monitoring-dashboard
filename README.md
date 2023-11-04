@@ -4,6 +4,9 @@ This project is built using PHP, and is designed to be a basic monitoring dashbo
 
 The dashboard will then refresh every so often, providing a near real time health check for your servers. There is also an email alert facility to notify you of abnormal spikes.
 
+# Screenshot
+![Dashboard Screenshot]([http://full/path/to/img.jpg](https://3206152400-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Ffa4i5Bp0bD4kDH6d699P%2Fuploads%2FJqFZzxqTJrlyUJUWoieD%2Fdashboard.png?alt=media&token=cf6a6cfd-c158-4829-a24a-3217bd6c5c18))
+
 # What metrics are collected?
 
 Currently core metrics such as:
