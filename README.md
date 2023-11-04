@@ -22,3 +22,7 @@ https://scriptables.gitbook.io/monitoring-dashboard/
 
 ## Need help?
 Please contact us via: https://plexscriptables.com/ or use the issues and discussion boards.
+
+## Need to deploy servers fast and safely?
+
+We also provide a free open source server deployment tool called Scriptables. Grab your copy of Scriptables here: https://github.com/plexcorp-pty-ltd/scriptables and learn more here: https://plexscriptables.com/ 
