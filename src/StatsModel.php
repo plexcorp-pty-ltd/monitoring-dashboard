@@ -1,25 +1,26 @@
 <?php namespace Plexcorp\Monitoring;
+
 /**
  * $this main model that we use to store and retrieve monitoring statistics.
  */
-class StatsModel extends Db 
+class StatsModel extends Db
 {
     /**
      * Return stat in percentage and timestamp. Can filter by hostname as well.
      *
      * @param string $stat_name
      * @param string $hostname
-     * 
+     *
      * @return array
      */
-    function getPercentagStat($stat_name, $hostname = "all")
+    public function getPercentagStat($stat_name, $hostname = "all")
     {
         $since = date("Y-m-d H:i:s", strtotime("-30 minutes"));
         $binds = [$since, $stat_name];
         $sql = <<<SQL
-            SELECT stat_numerical, TIME(dt_datetime) as dt_time 
-            FROM server_stats 
-            WHERE dt_datetime >= ? AND stat_name = ? 
+            SELECT stat_numerical, TIME(dt_datetime) as dt_time
+            FROM server_stats
+            WHERE dt_datetime >= ? AND stat_name = ?
         SQL;
 
         if ($hostname != "all") {
@@ -37,7 +38,7 @@ class StatsModel extends Db
      *
      * @return array
      */
-    function getHostnames()
+    public function getHostnames()
     {
         $since = date("Y-m-d H:i:s", strtotime("-30 minutes"));
         $sql = <<<SQL
@@ -54,10 +55,11 @@ class StatsModel extends Db
      * @param array $data
      * @return void
      */
-    function saveStat($data) {
+    public function saveStat($data)
+    {
         $id = $this->saveData("server_stats", $data);
         $thresholdType = strtoupper($data['stat_name']) . "_THRESHOLD";
-        if (isset( $_ENV[$thresholdType]) && (float) $data['stat_numerical'] > (float) $_ENV[$thresholdType]) {
+        if (isset($_ENV[$thresholdType]) && (float) $data['stat_numerical'] > (float) $_ENV[$thresholdType]) {
             $spikeData = [
                 "stat_id" => $id,
                 "threshold" => $_ENV[$thresholdType],
@@ -75,21 +77,29 @@ class StatsModel extends Db
      * @param string $hostname
      * @return array
      */
-    function getSpikes($since, $hostname)
+    public function getSpikes($since, $hostname)
     {
         $sql = <<<SQL
         SELECT s.hostname, s.stat_name,
         count(stat_id) as total_in_alarm,
         MAX(s.stat_numerical) as actual_value,
         MIN(spk.threshold) as threshold
-        FROM server_stats s 
-        JOIN server_spikes spk ON (s.id = spk.stat_id) 
+        FROM server_stats s
+        JOIN server_spikes spk ON (s.id = spk.stat_id)
         WHERE s.dt_datetime >= ?
         AND s.hostname= ?
-        GROUP BY stat_name having total_in_alarm >= ?;
+        GROUP BY stat_name
         SQL;
 
-        return $this->query($sql, [$since, $hostname, $_ENV["ALERT_THRESHOLD_MIN"]]);
+        // For some weird reason HAVING in SQlite3 has weird results.
+        $spikes = $this->query($sql, [$since, $hostname]);
+        foreach($spikes as $id => $spk) {
+            if ($spk['total_in_alarm'] < $_ENV["ALERT_THRESHOLD_MIN"]) {
+                unset($spikes[$id]);
+            }
+        }
+
+        return $spikes;
     }
 
     /**
@@ -97,7 +107,7 @@ class StatsModel extends Db
      *
      * @return int
      */
-    function emailsSentToday()
+    public function emailsSentToday()
     {
         $sql = "SELECT COUNT(*) as sent FROM emails_sent_today WHERE date_no_time = ?";
         $st = $this->pdo->prepare($sql);
